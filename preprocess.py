@@ -30,12 +30,3 @@ def stopword_removal_and_stem_tokenizer(text):
     stemmed_tokens = [snowball.stem(w) for w in filtered_tokens]
 
     return stemmed_tokens
-
-# TF-IDF Vectorizer
-vectorizer = TfidfVectorizer(
-    tokenizer=stopword_removal_and_stem_tokenizer,
-    preprocessor=None,
-    lowercase=False,
-    ngram_range=(1,2),
-    max_features=50000
-)
