@@ -38,5 +38,22 @@ def load_data(path):
                 rows += content
         return pd.DataFrame(rows)
 
+    if path == 'datasets/aclImdb':
+        train_rows = []
+        for label in ('neg', 'pos'):
+            folder = data_dir / 'train' / label
+            for file in sorted(folder.glob('*.txt')):
+                text = file.read_text(encoding='utf8', errors='ignore')
+                train_rows.append({'text': text, 'label': 1 if label=='pos' else 0})
+
+        test_rows = []
+        for label in ('neg', 'pos'):
+            folder = data_dir / 'test' / label
+            for file in sorted(folder.glob('*.txt')):
+                text = file.read_text(encoding='utf8', errors='ignore')
+                test_rows.append({'text': text, 'label': 1 if label=='pos' else 0})
+
+        return pd.DataFrame(train_rows), pd.DataFrame(test_rows)
+
 if __name__ == '__main__':
     pass
