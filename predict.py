@@ -29,4 +29,5 @@ if __name__ == '__main__':
         "Loved the trailer, hated the movie. It feels padded with filler scenes and the villain's motives are laughable. A few moments work, but overall it wasted a good cast and an okay idea."
     ]
 
-    print(make_prediction(reviews,'models/tfidf_svm_review_polarity.joblib'))
+    print(make_prediction(reviews,'models/tfidf_svm_review_polarity.joblib'), "Model trained on review polarity dataset")
+    print(make_prediction(reviews, 'models/tfidf_svm_rt-polaritydata.joblib'), "Model trained on rt-polarity dataset")
