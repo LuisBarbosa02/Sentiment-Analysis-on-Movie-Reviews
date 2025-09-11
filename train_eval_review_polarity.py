@@ -5,8 +5,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from preprocess import stopword_removal_and_stem_tokenizer
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
 import numpy as np
+import pandas as pd
 from collections import Counter
 import joblib
 
@@ -24,8 +25,9 @@ param_grid = {
 }
 
 fold_best_params = []
-fold_accuracies = []
-
+per_fold_metrics = []
+y_test_all = []
+y_pred_all = []
 for fold in range(1, 11):
     # Separating training and testing data
     train_mask = dataset['fold'] != fold
@@ -51,21 +53,33 @@ for fold in range(1, 11):
     gs.fit(X_train, y_train)
 
     # Evaluating model
-    best_estimator = gs.best_estimator_
     best_params = gs.best_params_
     fold_best_params.append(best_params)
 
-    preds = best_estimator.predict(X_test)
-    acc = accuracy_score(y_test, preds)
-    fold_accuracies.append(acc)
+    best_estimator = gs.best_estimator_
+    y_pred = best_estimator.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    precision, recall, f1, _ = precision_recall_fscore_support(y_test, y_pred, average='binary', pos_label=1)
+    per_fold_metrics.append({
+        'accuracy': acc, 'precision': precision, 'recall': recall, 'f1': f1
+    })
+
+    y_test_all += y_test.tolist()
+    y_pred_all += y_pred.tolist()
 
 # Printing evaluations
-print('Per-fold best parameters in order:')
-print(fold_best_params, '\n')
-print('Per-fold accuracies in order:')
-print(fold_accuracies, '\n')
-print('Mean accuracy:')
-print(np.mean(fold_accuracies), '\n') # Accuracy of 0.849 for the cross-validation
+df = pd.DataFrame(per_fold_metrics)
+averages = df.mean()
+stds = df.std()
+print('Evaluation:')
+print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}") # Accuracy of 0.849 for the cross-validation
+print(f"Precision: {averages['precision']:.4f} ± {stds['precision']:.4f}")
+print(f"Recall: {averages['recall']:.4f} ± {stds['recall']:.4f}")
+print(f"F1-score: {averages['f1']:.4f} ± {stds['f1']:.4f}", '\n')
+
+print('Confusion matrix:')
+print(confusion_matrix(y_test_all, y_pred_all), '\n')
 
 # Selecting best parameters
 cs = [d['classifier__C'] for d in fold_best_params]
@@ -93,4 +107,6 @@ final_pipeline = Pipeline([
     ("classifier", LinearSVC(C=best_c, max_iter=10000))
 ])
 final_pipeline.fit(X, y)
+
+# Saving model
 joblib.dump(final_pipeline, "models/tfidf_svm_review_polarity.joblib")
