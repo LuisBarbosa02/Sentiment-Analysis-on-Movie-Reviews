@@ -32,4 +32,5 @@ if __name__ == '__main__':
 
     print(make_prediction(reviews,'models/tfidf_svm_review_polarity.joblib'), "Model trained on review polarity dataset")
     print(make_prediction(reviews, 'models/tfidf_svm_rt-polaritydata.joblib'), "Model trained on rt-polarity dataset")
+    print(make_prediction(reviews, 'models/tfidf_svm_aclImdb.joblib'))
     print(np.array([1, 1, 1, 1, 1, 0, 0, 0, 0, 0]), "Correct labels")
