@@ -1,6 +1,7 @@
 # Import libraries
 import joblib
 import numpy as np
+from sklearn.metrics import accuracy_score
 
 def make_prediction(text, pipeline_path):
     # Loading pipeline
@@ -29,8 +30,13 @@ if __name__ == '__main__':
         "Beautiful shots, terrible movie. The director keeps showing the same visual trick over and over as if that replaces character development. I wanted an emotional connection and never got one.",
         "Loved the trailer, hated the movie. It feels padded with filler scenes and the villain's motives are laughable. A few moments work, but overall it wasted a good cast and an okay idea."
     ]
+    labels = [1]*5 + [0]*5
 
-    print(make_prediction(reviews,'models/tfidf_svm_review_polarity.joblib'), "Model trained on review polarity dataset")
-    print(make_prediction(reviews, 'models/tfidf_svm_rt-polaritydata.joblib'), "Model trained on rt-polarity dataset")
-    print(make_prediction(reviews, 'models/tfidf_svm_aclImdb.joblib'))
-    print(np.array([1, 1, 1, 1, 1, 0, 0, 0, 0, 0]), "Correct labels")
+    preds_rp = make_prediction(reviews,'models/tfidf_svm_review_polarity.joblib')
+    preds_pd = make_prediction(reviews, 'models/tfidf_svm_rt-polaritydata.joblib')
+    preds_imdb = make_prediction(reviews, 'models/tfidf_svm_aclImdb.joblib')
+
+    print("Prediction accuracy for 10 artificially generated samples:")
+    print(accuracy_score(labels, preds_rp), "for review polarity")
+    print(accuracy_score(labels, preds_pd), "for polarity data")
+    print(accuracy_score(labels, preds_imdb), "for IMDb")
