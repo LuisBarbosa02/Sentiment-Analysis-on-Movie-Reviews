@@ -6,7 +6,6 @@ from preprocess import stopword_removal_and_stem_tokenizer
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
-import numpy as np
 import pandas as pd
 from collections import Counter
 import joblib
