@@ -19,9 +19,9 @@ y = dataset['label'].to_numpy()
 
 # Training model
 param_grid = {
-    'vectorizer__ngram_range': [(1,2)], # [(1,1), (1,2)]. Best (1,2)
-    'vectorizer__max_features': [30000], # [30000, 40000, 50000]. Best 30000
-    'classifier__C': [10.0] # [0.1, 1.0, 10.0]. Best 10.0
+    'vectorizer__ngram_range': [(1,2)], # [(1,1), (1,2)]
+    'vectorizer__max_features': [30000], # [30000, 40000, 50000]
+    'classifier__C': [10.0] # [0.1, 1.0, 10.0]
 }
 
 fold_best_params = []
@@ -73,7 +73,7 @@ df = pd.DataFrame(per_fold_metrics)
 averages = df.mean()
 stds = df.std()
 print('Evaluation:')
-print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}") # Accuracy of 0.849 for the cross-validation
+print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}")
 print(f"Precision: {averages['precision']:.4f} ± {stds['precision']:.4f}")
 print(f"Recall: {averages['recall']:.4f} ± {stds['recall']:.4f}")
 print(f"F1-score: {averages['f1']:.4f} ± {stds['f1']:.4f}", '\n')

@@ -27,9 +27,9 @@ pipeline = Pipeline([
 
 # GridSearch configuration
 param_grid = {
-    'vectorizer__ngram_range': [(1,2)], # [(1,1), (1,2), (1,3)]. Best (1,2)
-    'vectorizer__max_features': [50000], # [20000, ..., 70000]. Best 50000
-    'classifier__C': [1.0] # [0.1, 1.0, 2.0, 5.0, 10.0]. Best 1.0
+    'vectorizer__ngram_range': [(1,2)], # [(1,1), (1,2), (1,3)]
+    'vectorizer__max_features': [50000], # [20000, ..., 70000]
+    'classifier__C': [1.0] # [0.1, 1.0, 2.0, 5.0, 10.0]
 }
 
 # Training model
@@ -70,7 +70,7 @@ df = pd.DataFrame(per_fold_metrics)
 averages = df.mean()
 stds = df.std()
 print('Evaluation:')
-print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}") # Accuracy of 0.767 for the cross-validation
+print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}")
 print(f"Precision: {averages['precision']:.4f} ± {stds['precision']:.4f}")
 print(f"Recall: {averages['recall']:.4f} ± {stds['recall']:.4f}")
 print(f"F1-score: {averages['f1']:.4f} ± {stds['f1']:.4f}", '\n')
