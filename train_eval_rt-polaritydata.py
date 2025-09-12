@@ -5,8 +5,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from preprocess import stopword_removal_and_stem_tokenizer
 from sklearn.svm import LinearSVC
-from sklearn.metrics import accuracy_score
-import numpy as np
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
+import pandas as pd
 from collections import Counter
 import joblib
 
@@ -36,7 +36,9 @@ param_grid = {
 outer_cv = StratifiedKFold(n_splits=10, shuffle=True, random_state=42)
 
 fold_best_params = []
-fold_accuracies = []
+per_fold_metrics = []
+y_test_all = []
+y_pred_all = []
 for train_idx, test_idx in outer_cv.split(X, y):
     # Splitting data
     X_train = X[train_idx]
@@ -52,17 +54,29 @@ for train_idx, test_idx in outer_cv.split(X, y):
     fold_best_params.append(gs.best_params_)
 
     best_estimator = gs.best_estimator_
-    preds = best_estimator.predict(X_test)
-    acc = accuracy_score(y_test, preds)
-    fold_accuracies.append(acc)
+    y_pred = best_estimator.predict(X_test)
+
+    acc = accuracy_score(y_test, y_pred)
+    precision, recall, f1, _ = precision_recall_fscore_support(y_test, y_pred, average='binary', pos_label=1)
+    per_fold_metrics.append(
+        {'accuracy': acc, 'precision': precision, 'recall': recall, 'f1': f1}
+    )
+
+    y_test_all += y_test.tolist()
+    y_pred_all += y_pred.tolist()
 
 # Printing evaluations
-print('Per-fold best parameters in order:')
-print(fold_best_params, '\n')
-print('Per-fold accuracies in order:')
-print(fold_accuracies, '\n')
-print('Mean accuracy:')
-print(np.mean(fold_accuracies), '\n') # Accuracy of 0.767 for the cross-validation
+df = pd.DataFrame(per_fold_metrics)
+averages = df.mean()
+stds = df.std()
+print('Evaluation:')
+print(f"Accuracy: {averages['accuracy']:.4f} ± {stds['accuracy']:.4f}") # Accuracy of 0.767 for the cross-validation
+print(f"Precision: {averages['precision']:.4f} ± {stds['precision']:.4f}")
+print(f"Recall: {averages['recall']:.4f} ± {stds['recall']:.4f}")
+print(f"F1-score: {averages['f1']:.4f} ± {stds['f1']:.4f}", '\n')
+
+print('Confusion matrix:')
+print(confusion_matrix(y_test_all, y_pred_all), '\n')
 
 # Select best parameters
 cs = [d['classifier__C'] for d in fold_best_params]
