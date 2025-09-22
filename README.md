@@ -1,9 +1,9 @@
 # Sentiment Analysis on Movie Reviews
 
 ## Table of Contents
-1. [Context]
-2. [How to Use]
-3. [Data]
+1. [Context](https://github.com/LuisBarbosa02/Sentiment-Analysis-on-Movie-Reviews?tab=readme-ov-file#context)
+2. [How to Use](https://github.com/LuisBarbosa02/Sentiment-Analysis-on-Movie-Reviews?tab=readme-ov-file#how-to-use)
+3. [Data](https://github.com/LuisBarbosa02/Sentiment-Analysis-on-Movie-Reviews?tab=readme-ov-file#data)
 
 ## Context
 This repository contains the full development and evaluation of a binary sentiment classification system, along with the saved models for deployment.
