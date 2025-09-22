@@ -1,6 +1,5 @@
 # Import libraries
 import joblib
-import numpy as np
 from sklearn.metrics import accuracy_score
 
 def make_prediction(text, pipeline_path):
