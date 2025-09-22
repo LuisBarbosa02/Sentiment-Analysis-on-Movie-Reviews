@@ -15,7 +15,7 @@ This repository requires Python 3.12.0
 Clone and change to repository
 ```bash
 git clone https://github.com/LuisBarbosa02/Sentiment-Analysis-on-Movie-Reviews.git
-cd Sentiment-Analysis-on-Moview-Reviews 
+cd Sentiment-Analysis-on-Movie-Reviews 
 ```
 
 [Optional] Create and activate a virtual environment
